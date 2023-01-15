@@ -1,8 +1,8 @@
 const config = {
-  url: "",
+  url: "https://bookstore.demoqa.com",
   credentials: {
-    username: "",
-    password: "",
+    userName: "demoUsername",
+    password: "demoPassword",
   },
 };
 

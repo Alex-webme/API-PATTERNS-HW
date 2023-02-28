@@ -1,21 +1,15 @@
 import supertest from "supertest";
 import config from "../config";
+import userData from "../helpers/genUserData";
 
 const user = {
-  getAuthToken: async (payload) => {
-    const res = await supertest(config.url)
-      .post("/account/v1/generatetoken")
-      .set("Accept", "application/json")
-      .send(payload);
-    return res.body.token;
-  },
-
-  addBook: (token, payload) => {
-    return supertest(config.url)
-      .post("/bookstore/v1/books")
-      .set("Accept", "application/json")
-      .set("Authorization", `Bearer ${token}`)
-      .send(payload);
+  create: () => {
+    return supertest(config.url).post("/api/v1/register").send({
+      email: userData.email,
+      id: userData.id,
+      password: userData.password,
+      username: userData.username,
+    });
   },
 };
 

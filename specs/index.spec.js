@@ -3,7 +3,7 @@ import config from "../framework/config";
 import userData from "../framework/helpers/genUserData";
 
 describe("POST /api/v1/register", () => {
-  test("Создание нового пользователя возвращает 200", async () => {
+  test("Можно создать нового пользователя", async () => {
     const res = await user.create();
     expect(res.status).toEqual(200);
   });
@@ -54,5 +54,26 @@ describe("GET /api/v1/user", () => {
     const token = await user.getAuthToken();
     const res = await user.getUserInfo(token);
     expect(res.status).toEqual(200);
+  });
+});
+
+describe("POST /api/v1/user/password", () => {
+  test("Пароль меняется, если ввести правильный старый пароль", async () => {
+    const token = await user.getAuthTokenWithCache();
+    const res = await user.changePassword(token);
+    expect(res.status).toEqual(200);
+    expect(res.body).toEqual({
+      message: "The password was updated successfully.",
+    });
+  });
+
+  test("Пароль НЕ меняется, если ввести неправильный старый пароль", async () => {
+    const token = await user.getAuthTokenWithCache();
+    const res = await user.changePassword(token);
+    expect(res.status).toEqual(412);
+    expect(res.body).toEqual({
+      code: 1011,
+      message: "Wrong username or password.",
+    });
   });
 });

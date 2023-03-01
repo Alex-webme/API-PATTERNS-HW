@@ -1,10 +1,8 @@
-import userData from "./helpers/genUserData";
-
 const config = {
-  url: "https://try.vikunja.io",
+  url: "https://bookstore.demoqa.com",
   credentials: {
-    password: userData.password,
-    username: userData.username,
+    userName: "Jean-Jacques.Rousseau",
+    password: "HNc8T4x3TMAnchZ3!",
   },
 };
 

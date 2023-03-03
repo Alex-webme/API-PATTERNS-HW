@@ -1,32 +1,46 @@
 import supertest from "supertest";
 import config from "../config";
-let token = "";
 
 const user = {
-  create: () => {
-    return supertest(config.url)
-      .post("/account/v1/user")
-      .send(config.credentials);
-  },
-
   // Функция получения токена
-  async getAuthToken() {
-    const payload = config.credentials;
-    const res = await this.login(payload); // в API Bookstor'а есть отдельный метод, чтобы получить токен
-    return res.body.token;
+  async getToken() {
+    const response = await supertest(config.url)
+      .post("/account/v1/generatetoken")
+      .send(config.credentials);
+    return response.body.token;
   },
 
   // Функция получения токена из кэша
-  async getAuthTokenWithCache() {
-    if (token) {
-      return token;
-    }
-    token = await this.getAuthToken();
-    return token;
+  // async getTokenWithCache() {
+  //   if (token) {
+  //     console.log("Токен есть в кэше");
+  //     return token;
+  //   }
+  //   console.log("Токен генерится по-новой");
+  //   token = await this.getToken();
+  //   return token;
+  // },
+
+  addBooks: (token) => {
+    return supertest(config.url)
+      .post("/bookstore/v1/books")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        userId: config.userid,
+        collectionOfIsbns: [
+          {
+            isbn: config.isbn,
+          },
+        ],
+      });
   },
 
-  login: (payload) => {
-    return supertest(config.url).post("/api/v1/login").send(payload);
+  deleteBooks: (token) => {
+    return supertest(config.url)
+      .delete("/bookstore/v1/books")
+      .query({ UserId: config.userid })
+      .set("Authorization", `Bearer ${token}`)
+      .send();
   },
 };
 

@@ -12,13 +12,12 @@ const user = {
 
   // Функция получения токена из кэша
   // async getTokenWithCache() {
-  //   if (token) {
-  //     console.log("Токен есть в кэше");
-  //     return token;
-  //   }
-  //   console.log("Токен генерится по-новой");
-  //   token = await this.getToken();
-  //   return token;
+  //   // if (token) {
+  //   //   return token;
+  //   // }
+  //   // token = await this.getToken();
+  //   // return token;
+  //   return token ?? this.getToken();
   // },
 
   addBooks: (token) => {
@@ -26,7 +25,7 @@ const user = {
       .post("/bookstore/v1/books")
       .set("Authorization", `Bearer ${token}`)
       .send({
-        userId: config.userid,
+        userId: config.userId,
         collectionOfIsbns: [
           {
             isbn: config.isbn,
@@ -38,7 +37,7 @@ const user = {
   deleteBooks: (token) => {
     return supertest(config.url)
       .delete("/bookstore/v1/books")
-      .query({ UserId: config.userid })
+      .query({ UserId: config.userId })
       .set("Authorization", `Bearer ${token}`)
       .send();
   },

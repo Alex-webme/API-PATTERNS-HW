@@ -8,7 +8,7 @@ beforeAll(async () => {
 });
 
 describe("POST /bookstore/v1/books", () => {
-  test("Before tests run: all books have been deleted from the user collection", async () => {
+  test("Предусловия выполнены: все книги были удалены из коллекции юзера", async () => {
     const response = await books.delete(process.env.TOKEN);
     expect(response.status).toEqual(204);
   });
@@ -21,7 +21,7 @@ describe("POST /bookstore/v1/books", () => {
     });
   });
 
-  test("Запрос на добавление книги возвращает 400 и код ошибки 1210, если книга была добавлена в коллекции ранее", async () => {
+  test("Запрос на добавление книги возвращает 400 и код ошибки 1210, если книга была добавлена в коллекцию ранее", async () => {
     const response = await books.add(process.env.TOKEN);
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
@@ -30,7 +30,7 @@ describe("POST /bookstore/v1/books", () => {
     });
   });
 
-  test("Запрос на добавление книги возвращает 401 и код ошибки 1200, если юзер не авторизован", async () => {
+  test("Запрос на добавление книги возвращает 401 и код ошибки 1200, если пользователь не авторизован", async () => {
     const response = await books.add(); // не передаем токен, чтобы имитировать Unauthorized
     expect(response.status).toEqual(401);
     expect(response.body).toEqual({

@@ -1,9 +1,12 @@
 const config = {
-  url: "",
+  url: "https://bookstore.demoqa.com",
   credentials: {
-    username: "",
-    password: "",
+    userName: "Jean-Jacques.Rousseau",
+    password: "HNc8T4x3TMAnchZ3!",
   },
+  userId: "0492d0c2-3a21-4aa4-8e72-23b4c567fc2c",
+  isbn: "9781491904244",
+  newIsbn: "9781593275846",
 };
 
 export default config;

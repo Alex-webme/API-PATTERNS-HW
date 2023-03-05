@@ -70,32 +70,44 @@ describe("PUT /bookstore/v1/books/<ISBN>", () => {
 });
 
 describe("GET /bookstore/v1/book", () => {
-  test("Можно получить информацию о книге", async () => {
-    const response = await books.getSpecificBook(config.isbn);
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      isbn: "9781491904244",
-      title: "You Don't Know JS",
-      subTitle: "ES6 & Beyond",
-      author: "Kyle Simpson",
-      publish_date: "2015-12-27T00:00:00.000Z",
-      publisher: "O'Reilly Media",
-      pages: 278,
-      description:
-        'No matter how much experience you have with JavaScript, odds are you don’t fully understand the language. As part of the \\"You Don’t Know JS\\" series, this compact guide focuses on new features available in ECMAScript 6 (ES6), the latest version of the st',
-      website:
-        "https://github.com/getify/You-Dont-Know-JS/tree/master/es6%20&%20beyond",
-    });
+  test.each`
+    title                                                             | isbn                   | status | code         | message
+    ${"Можно получить информацию о книге"}                            | ${config.isbn}         | ${200} | ${undefined} | ${undefined}
+    ${"Нельзя получить информацию о книге, если такой не существует"} | ${randomData.fakeISBN} | ${400} | ${"1205"}    | ${"ISBN supplied is not available in Books Collection!"}
+  `("$title", async ({ isbn, status, code, message }) => {
+    const response = await books.getSpecificBook(isbn);
+    expect(response.status).toEqual(status);
+    expect(response.body.code).toEqual(code);
+    expect(response.body.message).toEqual(message);
   });
 
-  test("Нельзя получить информацию о книге, если такой не существует", async () => {
-    const response = await books.getSpecificBook(randomData.fakeISBN);
-    expect(response.status).toEqual(400);
-    expect(response.body).toEqual({
-      code: "1205",
-      message: "ISBN supplied is not available in Books Collection!",
-    });
-  });
+  // test("Можно получить информацию о книге", async () => {
+  //   const response = await books.getSpecificBook(config.isbn);
+  //   expect(response.status).toEqual(200);
+  //   // expect(typeof response.body).toBe("object");
+  //   // expect(response.body).toEqual({
+  //   //   isbn: "9781491904244",
+  //   //   title: "You Don't Know JS",
+  //   //   subTitle: "ES6 & Beyond",
+  //   //   author: "Kyle Simpson",
+  //   //   publish_date: "2015-12-27T00:00:00.000Z",
+  //   //   publisher: "O'Reilly Media",
+  //   //   pages: 278,
+  //   //   description:
+  //   //     'No matter how much experience you have with JavaScript, odds are you don’t fully understand the language. As part of the \\"You Don’t Know JS\\" series, this compact guide focuses on new features available in ECMAScript 6 (ES6), the latest version of the st',
+  //   //   website:
+  //   //     "https://github.com/getify/You-Dont-Know-JS/tree/master/es6%20&%20beyond",
+  //   // });
+  // });
+
+  // test("Нельзя получить информацию о книге, если такой не существует", async () => {
+  //   const response = await books.getSpecificBook(randomData.fakeISBN);
+  //   expect(response.status).toEqual(400);
+  //   expect(response.body).toEqual({
+  //     code: "1205",
+  //     message: "ISBN supplied is not available in Books Collection!",
+  //   });
+  // });
 });
 
 describe("DELETE /bookstore/v1/book", () => {

@@ -70,15 +70,36 @@ describe("PUT /bookstore/v1/books/<ISBN>", () => {
 });
 
 describe("GET /bookstore/v1/book", () => {
-  test.each`
-    title                                                             | isbn                   | status | code         | message
-    ${"Можно получить информацию о книге"}                            | ${config.isbn}         | ${200} | ${undefined} | ${undefined}
-    ${"Нельзя получить информацию о книге, если такой не существует"} | ${randomData.fakeISBN} | ${400} | ${"1205"}    | ${"ISBN supplied is not available in Books Collection!"}
-  `("$title", async ({ isbn, status, code, message }) => {
+  // test.each`
+  //   title                                                             | isbn                   | status | code         | message
+  //   ${"Можно получить информацию о книге"}                            | ${config.isbn}         | ${200} | ${undefined} | ${undefined}
+  //   ${"Нельзя получить информацию о книге, если такой не существует"} | ${randomData.fakeISBN} | ${400} | ${"1205"}    | ${"ISBN supplied is not available in Books Collection!"}
+  // `("$title", async ({ isbn, status, code, message }) => {
+  //   const response = await books.getSpecificBook(isbn);
+  //   expect(response.status).toEqual(status);
+  //   expect(response.body.code).toEqual(code);
+  //   expect(response.body.message).toEqual(message);
+  // });
+
+  // Вместо того, что выбрали вы, попробуйте вот такой вариант параметризации теста:
+  test.each([
+    {
+      isbn: config.isbn,
+      status: 200,
+      code: undefined,
+      message: undefined,
+    },
+    {
+      isbn: randomData.fakeISBN,
+      status: 400,
+      code: "1205",
+      message: "ISBN supplied is not available in Books Collection!",
+    },
+  ])("books.getSpecificBook($a)", async ({ isbn, status, code, message }) => {
     const response = await books.getSpecificBook(isbn);
-    expect(response.status).toEqual(status);
-    expect(response.body.code).toEqual(code);
-    expect(response.body.message).toEqual(message);
+    expect(response.status).toBe(status);
+    expect(response.body.code).toBe(code);
+    expect(response.body.message).toBe(message);
   });
 
   // test("Можно получить информацию о книге", async () => {
